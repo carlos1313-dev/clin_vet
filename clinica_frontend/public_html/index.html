@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Veterinaria - Gestión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: #007bff;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #007bff;
+        }
+
+        .form-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0,123,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            color: #212529;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .data-section {
+            margin-top: 30px;
+        }
+
+        .data-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .data-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .data-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .data-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .data-item strong {
+            color: #007bff;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐾 Clínica Veterinaria</h1>
+            <p>Sistema de Gestión de Mascotas y Dueños</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('duenios')">👥 Dueños</button>
+            <button class="tab" onclick="showTab('mascotas')">🐕 Mascotas</button>
+            <button class="tab" onclick="showTab('caniches')">🐩 Caniches</button>
+            <button class="tab" onclick="showTab('relaciones')">📋 Mascotas y Dueños</button>
+        </div>
+
+        <!-- Tab Dueños -->
+        <div id="duenios" class="tab-content active">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDuenios">0</div>
+                    <div>Total Dueños</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Gestión de Dueños</h3>
+                <form id="duenioForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="duenioDni">DNI:</label>
+                            <input type="text" id="duenioDni" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="duenioNombre">Nombre:</label>
+                            <input type="text" id="duenioNombre" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="duenioApellido">Apellido:</label>
+                            <input type="text" id="duenioApellido" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="duenioCelular">Celular:</label>
+                            <input type="text" id="duenioCelular" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Crear Dueño</button>
+                    <button type="button" class="btn btn-success" onclick="getDuenios()">Actualizar Lista</button>
+                </form>
+            </div>
+
+            <div class="data-section">
+                <h3>Lista de Dueños</h3>
+                <div id="dueniosList" class="data-list"></div>
+            </div>
+        </div>
+
+        <!-- Tab Mascotas -->
+        <div id="mascotas" class="tab-content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalMascotas">0</div>
+                    <div>Total Mascotas</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Gestión de Mascotas</h3>
+                <form id="mascotaForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mascotaNombre">Nombre:</label>
+                            <input type="text" id="mascotaNombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mascotaEspecie">Especie:</label>
+                            <select id="mascotaEspecie" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="perro">Perro</option>
+                                <option value="gato">Gato</option>
+                                <option value="ave">Ave</option>
+                                <option value="hamster">Hamster</option>
+                                <option value="conejo">Conejo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mascotaRaza">Raza:</label>
+                            <input type="text" id="mascotaRaza" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mascotaColor">Color:</label>
+                            <input type="text" id="mascotaColor" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mascotaDuenio">Dueño:</label>
+                        <select id="mascotaDuenio" required>
+                            <option value="">Seleccionar dueño...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Crear Mascota</button>
+                    <button type="button" class="btn btn-success" onclick="getMascotas()">Actualizar Lista</button>
+                </form>
+            </div>
+
+            <div class="data-section">
+                <h3>Lista de Mascotas</h3>
+                <div id="mascotasList" class="data-list"></div>
+            </div>
+        </div>
+
+        <!-- Tab Caniches -->
+        <div id="caniches" class="tab-content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCaniches">0</div>
+                    <div>Total Caniches</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>🐩 Caniches Registrados</h3>
+                <button class="btn btn-primary" onclick="getCaniches()">Buscar Caniches</button>
+                <p style="color: #6c757d; margin-top: 10px;">Encuentra todos los perros de raza Caniche registrados en el sistema.</p>
+            </div>
+
+            <div class="data-section">
+                <h3>Lista de Caniches</h3>
+                <div id="canichesList" class="data-list"></div>
+            </div>
+        </div>
+
+        <!-- Tab Relaciones -->
+        <div id="relaciones" class="tab-content">
+            <div class="form-section">
+                <h3>📋 Reporte: Mascotas y sus Dueños</h3>
+                <button class="btn btn-primary" onclick="getMascoDuenios()">Generar Reporte</button>
+                <p style="color: #6c757d; margin-top: 10px;">Muestra la relación completa entre mascotas y sus respectivos dueños.</p>
+            </div>
+
+            <div class="data-section">
+                <h3>Mascotas y Dueños</h3>
+                <div id="relacionesList" class="data-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080';
+        let dueniosData = [];
+        let mascotasData = [];
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            getDuenios();
+            getMascotas();
+            loadDueniosSelect();
+        });
+
+        // Gestión de tabs
+        function showTab(tabName) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remover clase active de todos los tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar el contenido seleccionado
+            document.getElementById(tabName).classList.add('active');
+            
+            // Agregar clase active al tab seleccionado
+            event.target.classList.add('active');
+        }
+
+        // Funciones para mostrar mensajes
+        function showMessage(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            const container = document.querySelector('.tab-content.active .form-section');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        function showLoading(containerId) {
+            document.getElementById(containerId).innerHTML = '<div class="loading">Cargando datos...</div>';
+        }
+
+        function showEmptyState(containerId, message) {
+            document.getElementById(containerId).innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size: 3em; margin-bottom: 20px; opacity: 0.5;">📋</div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // DUEÑOS
+        async function getDuenios() {
+            showLoading('dueniosList');
+            try {
+                const response = await fetch(`${API_BASE}/duenio/traer`);
+                if (!response.ok) throw new Error('Error al obtener dueños');
+                
+                dueniosData = await response.json();
+                displayDuenios(dueniosData);
+                updateStats();
+                loadDueniosSelect();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error al cargar los dueños. Verifique que el servidor esté ejecutándose.', 'error');
+                showEmptyState('dueniosList', 'No se pudieron cargar los dueños');
+            }
+        }
+
+        function displayDuenios(duenios) {
+            const container = document.getElementById('dueniosList');
+            
+            if (duenios.length === 0) {
+                showEmptyState('dueniosList', 'No hay dueños registrados');
+                return;
+            }
+
+            container.innerHTML = duenios.map(duenio => `
+                <div class="data-item">
+                    <strong>ID:</strong> ${duenio.id_duenio} | 
+                    <strong>DNI:</strong> ${duenio.dni} | 
+                    <strong>Nombre:</strong> ${duenio.nombre} ${duenio.apellido} | 
+                    <strong>Celular:</strong> ${duenio.celular}
+                    <div style="margin-top: 10px;">
+                        <button class="btn btn-danger" onclick="deleteDuenio(${duenio.id_duenio})">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('duenioForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const duenio = {
+                dni: document.getElementById('duenioDni').value,
+                nombre: document.getElementById('duenioNombre').value,
+                apellido: document.getElementById('duenioApellido').value,
+                celular: document.getElementById('duenioCelular').value
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/duenio/crear`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(duenio)
+                });
+
+                if (!response.ok) throw new Error('Error al crear dueño');
+                
+                showMessage('Dueño creado exitosamente');
+                this.reset();
+                getDuenios();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error al crear el dueño', 'error');
+            }
+        });
+
+        async function deleteDuenio(id) {
+            if (!confirm('¿Está seguro de eliminar este dueño?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/duenio/borrar/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Error al eliminar dueño');
+                
+                showMessage('Dueño eliminado exitosamente');
+                getDuenios();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error al eliminar el dueño', 'error');
+            }
+        }
+
+        // MASCOTAS
+        async function getMascotas() {
+            showLoading('mascotasList');
+            try {
+                const response = await fetch(`${API_BASE}/mascotas/traer`);
+                if (!response.ok) throw new Error('Error al obtener mascotas');
+                
+                mascotasData = await response.json();
+                displayMascotas(mascotasData);
+                updateStats();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error al cargar las mascotas', 'error');
+                showEmptyState('mascotasList', 'No se pudieron cargar las mascotas');
+            }
+        }
+
+        function displayMascotas(mascotas) {
+            const container = document.getElementById('mascotasList');
+            
+            if (mascotas.length === 0) {
+                showEmptyState('mascotasList', 'No hay mascotas registradas');
+                return;
+            }
+
+            container.innerHTML = mascotas.map(mascota => `
+                <div class="data-item">
+                    <strong>ID:</strong> ${mascota.id} | 
+                    <strong>Nombre:</strong> ${mascota.nombre} | 
+                    <strong>Especie:</strong> ${mascota.especie} | 
+                    <strong>Raza:</strong> ${mascota.raza} | 
+                    <strong>Color:</strong> ${mascota.color}
+                    ${mascota.duenio ? `<br><strong>Dueño:</strong> ${mascota.duenio.nombre} ${mascota.duenio.apellido}` : ''}
+                    <div style="margin-top: 10px;">
+                        <button class="btn btn-danger" onclick="deleteMascota(${mascota.id})">Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('mascotaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const duenioId = document.getElementById('mascotaDuenio').value;
+            const duenio = dueniosData.find(d => d.id_duenio == duenioId);
+            
+            const mascota = {
+                nombre: document.getElementById('mascotaNombre').value,
+                especie: document.getElementById('mascotaEspecie').value,
+                raza: document.getElementById('mascotaRaza').value,
+                color: document.getElementById('mascotaColor').value,
+                duenio: duenio
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/mascotas/crear`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(mascota)
+                });
+
+                if (!response.ok) throw new Error('Error al crear mascota');
+                
+                showMessage('Mascota creada exitosamente');
+                this.reset();
+                getMascotas();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error al crear la mascota', 'error');
+            }
+        });
+
+        async function deleteMascota(id) {
+            if (!confirm('¿Está seguro de eliminar esta mascota?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/mascotas/borrar/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Error al eliminar mascota');
+                
+                showMessage('Mascota eliminada exitosamente');
+                getMascotas();
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error al eliminar la mascota', 'error');
+            }
+        }
+
+        // CANICHES
+        async function getCaniches() {
+            showLoading('canichesList');
+            try {
+                const response = await fetch(`${API_BASE}/mascotas/traer-caniches`);
+                if (!response.ok) throw new Error('Error al obtener caniches');
+                
+                const caniches = await response.json();
+                displayCaniches(caniches);
+                document.getElementById('totalCaniches').textContent = caniches.length;
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error al cargar los caniches', 'error');
+                showEmptyState('canichesList', 'No se pudieron cargar los caniches');
+            }
+        }
+
+        function displayCaniches(caniches) {
+            const container = document.getElementById('canichesList');
+            
+            if (caniches.length === 0) {
+                showEmptyState('canichesList', 'No hay caniches registrados');
+                return;
+            }
+
+            container.innerHTML = caniches.map(caniche => `
+                <div class="data-item">
+                    <strong>🐩 Nombre:</strong> ${caniche.nombre} | 
+                    <strong>Color:</strong> ${caniche.color}
+                    ${caniche.duenio ? `<br><strong>Dueño:</strong> ${caniche.duenio.nombre} ${caniche.duenio.apellido}` : ''}
+                </div>
+            `).join('');
+        }
+
+        // RELACIONES MASCOTA-DUEÑO
+        async function getMascoDuenios() {
+            showLoading('relacionesList');
+            try {
+                const response = await fetch(`${API_BASE}/mascotas/traer-duenios`);
+                if (!response.ok) throw new Error('Error al obtener relaciones');
+                
+                const relaciones = await response.json();
+                displayRelaciones(relaciones);
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error al cargar las relaciones', 'error');
+                showEmptyState('relacionesList', 'No se pudieron cargar las relaciones');
+            }
+        }
+
+        function displayRelaciones(relaciones) {
+            const container = document.getElementById('relacionesList');
+            
+            if (relaciones.length === 0) {
+                showEmptyState('relacionesList', 'No hay relaciones registradas');
+                return;
+            }
+
+            container.innerHTML = relaciones.map(relacion => `
+                <div class="data-item">
+                    <strong>🐾 Mascota:</strong> ${relacion.nombre_mascota} | 
+                    <strong>Especie:</strong> ${relacion.especie} | 
+                    <strong>Raza:</strong> ${relacion.raza}
+                    <br><strong>👤 Dueño:</strong> ${relacion.nombre_duenio} ${relacion.apellido_duenio}
+                </div>
+            `).join('');
+        }
+
+        // UTILIDADES
+        function loadDueniosSelect() {
+            const select = document.getElementById('mascotaDuenio');
+            select.innerHTML = '<option value="">Seleccionar dueño...</option>';
+            
+            dueniosData.forEach(duenio => {
+                const option = document.createElement('option');
+                option.value = duenio.id_duenio;
+                option.textContent = `${duenio.nombre} ${duenio.apellido}`;
+                select.appendChild(option);
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalDuenios').textContent = dueniosData.length;
+            document.getElementById('totalMascotas').textContent = mascotasData.length;
+        }
+    </script>
+</body>
+</html>
