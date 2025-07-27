@@ -18,11 +18,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                     "http://localhost:3000",
                     "http://localhost:8080", 
-                    "https://clinicavetfrontend-p-n.up.railway.app", // URL correcta sin barra final
+                    "https://clinicavetfrontend-production.up.railway.app", 
                     "*" // Temporalmente permitir todos los orígenes para testing
                 )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(false);
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*");
+        
     }
 }
