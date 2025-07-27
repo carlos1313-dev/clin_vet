@@ -4,6 +4,8 @@ import com.todocodeacademy.clinica_veterinaria.model.Mascota;
 import com.todocodeacademy.clinica_veterinaria.service.IMascotaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +20,18 @@ public class MascotaController {
     @Autowired
     private IMascotaService mascoServ;
 
-    @GetMapping("/mascotas/traer")
-    public List<Mascota> traerMascotas() {
-        return mascoServ.getMascotas();
+    @GetMapping(value = "/mascotas/traer", produces = "application/json")
+public ResponseEntity<List<Mascota>> traerMascotas() {
+    try {
+        List<Mascota> mascotas = mascoServ.getMascotas();
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/json")
+                .body(mascotas);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
     @PostMapping("/mascotas/crear")
     public String savePersona(@RequestBody Mascota masco) {
