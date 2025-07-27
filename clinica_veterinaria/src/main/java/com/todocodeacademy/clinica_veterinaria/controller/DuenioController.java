@@ -17,14 +17,16 @@ public class DuenioController {
      @Autowired
     private IDuenioService duenioServ;
      
-    @GetMapping(value = "/duenio/traer", produces = "application/json")
-    public List<Duenio> getPersonas() {    // Nombre original
+      @GetMapping ("/duenio/traer")
+    public List<Duenio> getPersonas() {
+        
         return duenioServ.getDuenios();
     }
     
     @PostMapping ("/duenio/crear")
     public String savePersona (@RequestBody Duenio duenio) {
         duenioServ.saveDuenio(duenio);
+        
         return "La persona fue creada correctamente";
     }
     
@@ -37,6 +39,8 @@ public class DuenioController {
     @PutMapping ("/duenio/editar")
     public Duenio editPersona(@RequestBody Duenio duenio) {
         duenioServ.editDuenio(duenio);
+        
         return duenioServ.findDuenio(duenio.getId_duenio());
     }
+    
 }
