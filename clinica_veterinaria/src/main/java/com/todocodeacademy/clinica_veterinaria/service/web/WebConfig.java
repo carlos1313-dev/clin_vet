@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                     "http://localhost:3000",
                     "http://localhost:8080", 
-                    "https://clinicavetfrontend-production.up.railway.app/", 
+                    "https://clinicavetfrontend-production.up.railway.app", 
                     "*" // Temporalmente permitir todos los orígenes para testing
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
